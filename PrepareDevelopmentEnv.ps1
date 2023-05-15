@@ -1,4 +1,6 @@
+if (Test-Path -Path .\.venv) {
 rm .\.venv -r -force
+}
 py.exe -3.7 -m venv .venv
 .\.venv\Scripts\activate.ps1
 # Install newer version of pip.
