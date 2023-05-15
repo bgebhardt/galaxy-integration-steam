@@ -13,5 +13,5 @@ requests-html==0.10.0
 pyppeteer==0.2.4  # requests-html dependency; 0.2.5 imports version from dist-info which we remove while building
 
 rsa==4.9
-# For ionstallation
+# Needed for installation
 invoke==1.2.0
