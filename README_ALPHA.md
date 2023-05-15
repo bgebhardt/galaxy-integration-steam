@@ -13,7 +13,7 @@ If you want only to install and test it run
 If you want to develop run:
 * ./PrepareDevelopmentEnv.ps1
 
-**Warning above commands will leave you in python virtual envioriment if you only wanted to install just close windows after installation is done. If you are developer well I hope that you know what is python virtual env. You can tell that any of above command completed because you will see (.venv) PS at the start of command line when they will complete **
+**Warning commands below will leave you in python virtual envioriment if you only wanted to install just close windows after installation is done. If you are developer well I hope that you know what is python virtual env. You can tell that any of above command completed because you will see (.venv) PS at the start of command line when they will complete **
 
 ## Setup (MacOS)
 * Download Python 3.7.9, 32-bit (64-bit also works, as does any newer version. Be warned, if you are using a new version and write any code, it may have unexpected results if you apply it to your plugin. You should leave that to us, so this wont be an issue)
