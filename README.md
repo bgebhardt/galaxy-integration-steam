@@ -6,16 +6,23 @@ GOG Galaxy 2.0 Community integration for Steam.
 * Download Python 3.7.9 32-bit
 * Install it with the defaults
 * Create a new virtual env:
-  `python.exe -m virtualenv .venv -p "C:\Users\<your username>\AppData\Local\Programs\Python\Python37-32\python.exe" --pip 22.0.4`
-* Activate the virtual env:
+    - If you only have python 3.7.9<br/>
+    `python.exe -m venv .venv -p "%localappdata%\Programs\Python\Python37-32\python.exe" --pip 22.0.4`
+    - IF you have multiple python versions installed (assumes you have `py` as well)<br/>
+    `py.exe -3.7 -m venv .venv --pip 22.0.4`
+* Activate the virtual env 
+  - Windows, Powershell:<br/>
   `.\.venv\Scripts\activate.ps1`
+  - MacOS, terminal:<br/>
+  `.venv/Scripts/activate`
+  
 * Install the dev dependencies:
   `pip install -r requirements/dev.txt`
 * Make your edits
 * Update the protobufs (See README_UPDATE_PROTOBUF_FILES.md for sources)
   Take notice of the initial diff between the files in `protobuf_files` and `protobuf_files/orig`
   Generating the python files is done via:
-  `inv generate-protobuf-messages`
+  `inv GenerateProtobufMessages`
 * Build your edits:
   `inv build`
 * Test your edits:
@@ -32,14 +39,12 @@ This is a fork of the repository from FriendsOfGalaxy, intended to continue deve
 ## Installation
 
 *~~The latest release should be available for download via the "Connect" button in Galaxy~~*
+We aren't ready to publish this project to Galaxy just yet. We have the tools to do so, but the code is not stable enough for us to consider that just yet. In the meantime, you can either manually patch the existing version, or you can install it a very small subset of the tools the developers use. 
 
-### To install a custom build:
-* make sure Galaxy is closed
-* remove the currently installed plugin directory (if present), usually<br>
-`%localappdata%\GOG.com\Galaxy\plugins\installed\steam_ca27391f-2675-49b1-92c0-896d43afa4f8`
-* create a new folder under a name of your choice (the name doesn't matter) at the following path:<br>
-`%localappdata%\GOG.com\Galaxy\plugins\installed\`
-* copy the custom build files to the newly created folder
+The easiest way to do this is with python installed, following the directions for development, however, you only need to do the first few steps. Once you reach the "Install the dev dependencies," stop there. You don't need all of those packages, you only need invoke. To get it, run<br/>
+`pip install invoke==1.2.0`
+After that, you can install the custom patch via
+`inv install`
 
 If the latest version available on Github is newer than the version specified in the `manifest.json` file in the custom build, Galaxy will download the newer version and replace the files. To prevent this from happening, you can manually set the version in `manifest.json` to a significantly higher value (e.g. `9.9`).
 
