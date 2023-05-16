@@ -405,14 +405,11 @@ class SteamNetworkBackend(BackendInterface):
 
         self._user_info_cache.from_dict(stored_credentials)
         if (self._user_info_cache.is_initialized()):
-            logger.info("USER CACHE INFO:")
-            logger.info(self._user_info_cache.account_username)
-            logger.info(self._user_info_cache.persona_name)
-            logger.info(self._user_info_cache.refresh_token)
             await self._websocket_client.communication_queues["websocket"].put({'mode': AuthCall.TOKEN})
             result = await self._get_websocket_auth_step()
             if (result != UserActionRequired.NoActionRequired):
-                logger.warning("Unexpected Action Required after token login. " + str(result) + ". Falling back to normal login")
+                logger.info("Unexpected Action Required after token login. " + str(result) + ". Can be caused when credentials expire or are deactivated. Falling back to normal login")
+                self._user_info_cache.Clear()
                 return next_step_response_simple(DisplayUriHelper.GET_USER, None)
             else:
                 return Authentication(self._user_info_cache.steam_id, self._user_info_cache.persona_name)

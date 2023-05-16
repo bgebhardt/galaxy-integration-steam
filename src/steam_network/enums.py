@@ -168,3 +168,13 @@ def to_UserAction(method: TwoFactorMethod) -> UserActionRequired:
         return UserActionRequired.TwoFactorRequired
     else: #if TwoFactorMethod.InvalidAuthData or an invalid number
         return UserActionRequired.InvalidAuthData
+
+class DisplayErrors(enum):
+    """Enumeration to help us display errors in our custom webpage. 
+    Each name is associated with an error url parameter.
+    """
+    INVALID_USER                = "inv-user"
+    PASSWORD_INCORRECT          = "bad-pass"
+    STEAM_GUARD_EXPIRED         = "2fa-expired"
+    STEAM_GUARD_INCORRECT       = "2fa-incorrect"
+    MOBILE_CONFIRM_NOT_COMPLETE = "2fa-not-confirmed"

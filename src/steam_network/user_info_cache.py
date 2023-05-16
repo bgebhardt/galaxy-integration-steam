@@ -21,7 +21,7 @@ class UserInfoCache:
         self.initialized = asyncio.Event()
 
     def _check_initialized(self):
-        if self._steam_id and self._account_username and self._persona_name and self._refresh_token and self._guard_data:
+        if self.is_initialized():
             logger.info("User info cache initialized")
             self.initialized.set()
             self._changed = True
@@ -130,6 +130,14 @@ class UserInfoCache:
         self._refresh_token = val
         if not self.initialized.is_set():
             self._check_initialized()
+
+    def Clear(self):
+        self._refresh_token = None
+        self._steam_id = None 
+        self._account_username = None 
+        self._persona_name = None 
+        self._access_token  = None 
+        #self._guard_data = None
 
     #@property
     #def guard_data(self):
