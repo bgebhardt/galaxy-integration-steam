@@ -1,14 +1,7 @@
 -r app.txt
 -r install.txt
 
-# Found 5.4.0 works for me better
-# see these issues for example errors with < 5.4.0
-# [Error importing BAR_TYPES with new pip 22.1 release · Issue #1617 · jazzband/pip-tools](https://github.com/jazzband/pip-tools/issues/1617)
-# [TypeError: make_requirement_preparer() got an unexpected keyword argument 'wheel_download_dir' · Issue #18 · ocr-d-modul-2-segmentierung/ocrd-pixelclassifier-segmentation](https://github.com/ocr-d-modul-2-segmentierung/ocrd-pixelclassifier-segmentation/issues/18)
-# [pip 20.3.3: TypeError: make_requirement_preparer() got an unexpected keyword argument 'wheel_download_dir' · Issue #1307 · jazzband/pip-tools](https://github.com/jazzband/pip-tools/issues/1307)
-# [pip 20.3b1: TypeError: make_requirement_preparer() got an unexpected keyword argument 'wheel_download_dir' · Issue #1228 · jazzband/pip-tools](https://github.com/jazzband/pip-tools/issues/1228)
-# looks like 5.5 or 6.2 might work too.
-pip-tools==5.4.0
+pip-tools==5.1.2
 
 pytest==5.2.0
 pytest-asyncio==0.10.0

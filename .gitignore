@@ -18,6 +18,3 @@ output/
 /env1
 /protoc
 *.zip
-
-# mac
-.DS_Store

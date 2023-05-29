@@ -60,26 +60,6 @@ We typically only need the `steam_<numbers and letters>.log` file.
 * Build a release package (zip):
   `inv pack`
 
-### Mac development set up
-
-*Install Python 3.7 on Mac:* The easiest way to manage Python versions on Mac is using pyenv as follows.
-1. install [Homebrew — The Missing Package Manager for macOS (or Linux)](https://brew.sh/)
-2. `brew install pyenv`
-3. `pyenv install 3.7.9`
-
-*Build the plugin*
-1. clone the repo: 
-  `gh repo clone ABaumher/galaxy-integration-steam`
-2. create a virtual environment in the dev directory 
-  `python -m venv .venv`
-3. activate the venv: 
-  `source .venv/bin/activate`
-4. Install the dev dependencies: 
-  `pip install -r requirements/dev.txt`
-5. Build the plugin with `inv build`
-
-
-
 ## Installation (non-developers)
 
 *~~The latest release should be available for download via the "Connect" button in Galaxy~~*
