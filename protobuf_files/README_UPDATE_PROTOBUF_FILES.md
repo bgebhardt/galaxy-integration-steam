@@ -22,3 +22,22 @@ Updating the compiled protobuf files is just as easy as the following steps:
 
 * <https://github.com/steamdatabase/protobufs>
 * <https://github.com/ValvePython/steam>
+
+## Installing and generating protobufs on Mac
+
+First time Install Python OpenSSL Certificates so the request library can pull Stream protobufs.
+
+1. Install python 3.7 from https://www.python.org/downloads/. It puts Python in your Applications directory
+2. `"/Applications/Python 3.7/Install Certificates.command"`  You must install for Python 3.7.
+
+The README instructions have you set up a virtual environment but for some reason `inv PullProtobufSteamMessages` looks for the certicicates in the "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/" directory, so you need both.
+
+See info in [python - urllib.error.URLError: <urlopen error \[SSL: CERTIFICATE_VERIFY_FAILED\] certificate verify failed: unable to get local issuer certificate (_ssl.c:1108) - Stack Overflow](https://stackoverflow.com/questions/68275857/urllib-error-urlerror-urlopen-error-ssl-certificate-verify-failed-certifica#:~:text=Here%20are%20the%20steps%20for%20macOS%3A%20Open%20the,had%20to%20do%20this%20twice%20before%20it%20worked.)
+
+Now you can run `inv PullProtobufSteamMessages` which will download and replace the protobufs checked into git.
+
+To regenerate protobufs you must get and install the protobuf compiler.
+
+1. `inv InstallProtoc`
+2. `chmod a+x protoc/bin/protoc` # the InstallProtoc task does not set the protoc to be executable
+3. `inv GenerateProtobufMessages` will now work.
