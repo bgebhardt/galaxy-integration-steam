@@ -18,3 +18,8 @@ output/
 /env1
 /protoc
 *.zip
+
+# mac
+.DS_Store
+# used by pyenv
+.python-version
