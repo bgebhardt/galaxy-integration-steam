@@ -3,7 +3,8 @@ from unittest.mock import MagicMock
 import pytest
 from galaxy.unittest.mock import AsyncMock
 
-from plugin import BackendMode
+#from plugin import BackendMode
+from backend_configuration import BackendMode
 
 
 @pytest.fixture
