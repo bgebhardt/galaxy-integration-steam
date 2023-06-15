@@ -43,10 +43,6 @@ class BackendInterface(abc.ABC):
     async def pass_login_credentials(self, deprecated:str, credentials, cookies):
         pass
 
-    #@abc.abstractmethod
-    #def register_auth_lost_callback(self, callback: Callable):
-    #    pass
-
     @abc.abstractmethod
     def tick(self):
         pass

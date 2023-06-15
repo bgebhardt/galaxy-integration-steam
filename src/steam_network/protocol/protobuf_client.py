@@ -151,7 +151,7 @@ class ProtobufClient:
         jobs_to_process = 0
         while True:
             if jobs_to_process < 2:
-                for job in self.job_list[:1].copy():
+                for job in self.job_list[:2].copy():
                     logger.info(f"New job on list {job}")
                     jobs_to_process += 1
                     if job['job_name'] == "import_game_stats":
@@ -186,8 +186,7 @@ class ProtobufClient:
         await self._send(emsg, message, source_job_id=job_id, target_job_name= target_job_name)
 
     #new workflow:  say hello -> get rsa public key -> log on with password -> handle steam guard -> confirm login
-    #each is getting a dedicated function so i don't go insane.
-    #confirm login is the old log_on_token call.
+    #unlike how websocket client does this (currently), these functions are written separately for clarity and sanity.
 
     async def say_hello(self):
         """Say Hello to the server. Necessary before sending non-authed calls.
@@ -199,31 +198,35 @@ class ProtobufClient:
         await self._send(EMsg.ClientHello,message)
 
     #send the get rsa key request
-    #imho we should just do a send and receive back to back instead of this bouncing around, but whatever.
     async def get_rsa_public_key(self, account_name: str):
+        """ Send a request to steam's servers for them to generate a public key for the account name provided. 
+        
+        Each request generates a unique key for each login attempt, so this cannot be cached. It's also not vulnerable to replay attacks. 
+        """
         message = CAuthentication_GetPasswordRSAPublicKey_Request()
         message.account_name = account_name
         await self._send_service_method_with_name(message, GET_RSA_KEY) #parsed from SteamKit's gobbledygook
 
     #process the received the rsa key response. Because we will need all the information about this process, we send the entire message up the chain.
     async def _process_rsa(self, result, body):
+        """ Receive the response to the RSA request sent in get_rsa_public_key
+        
+        parses the message and retrieves the data from it, then sends this along to the handler so it can further process it.
+        """
         message = CAuthentication_GetPasswordRSAPublicKey_Response()
         message.ParseFromString(body)
         logger.info("Received RSA KEY")
-        #logger.info(pformat(message))
         if (self.rsa_handler is not None):
             await self.rsa_handler(result, int(message.publickey_mod, 16), int(message.publickey_exp, 16), message.timestamp)
         else:
             logger.warning("NO RSA HANDLER SET!")
 
     async def log_on_password(self, account_name, enciphered_password: str, timestamp: int, os_value):
-        friendly_name: str = sock.gethostname() + " (GOG Galaxy)"
+        """Send a request to begin authentication using a user name and enciphered password. 
 
-        #device details is readonly. So we can't do this the easy way.
-        #device_details = CAuthentication_DeviceDetails()
-        #device_details.device_friendly_name =
-        #device_details.os_type = os_value if os_value >= 0 else 0
-        #device_details.platform_type= EAuthTokenPlatformType.k_EAuthTokenPlatformType_SteamClient
+
+        """
+        friendly_name: str = sock.gethostname() + " (GOG Galaxy)"
 
         message = CAuthentication_BeginAuthSessionViaCredentials_Request()
 
@@ -235,12 +238,12 @@ class ProtobufClient:
         message.platform_type = EAuthTokenPlatformType.k_EAuthTokenPlatformType_SteamClient #no idea if this line will work.
         #message.persistence = ESessionPersistence.k_ESessionPersistence_Persistent # this is the default value and i have no idea how reflected enums work in python.
 
-        #message.device_details = device_details
+        #device details is readonly. So we can't do this the easy way by creating a new instance and populating it directly. 
         #so let's do it the hard way.
         message.device_details.device_friendly_name = friendly_name
         message.device_details.os_type = os_value if os_value >= 0 else 0
         message.device_details.platform_type= EAuthTokenPlatformType.k_EAuthTokenPlatformType_SteamClient
-        #message.guard_data = ""
+        
         logger.info("Sending log on message using credentials in new authorization workflow")
 
         await self._send_service_method_with_name(message, LOGIN_CREDENTIALS)

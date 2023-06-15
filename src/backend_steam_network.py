@@ -210,13 +210,23 @@ class SteamNetworkBackend(BackendInterface):
             logger.warning("Unexpected state in pass_login_credentials")
             raise UnknownBackendResponse()
 
+    @staticmethod
+    def sanitize_string(data : str) -> str:
+        """Remove any characters steam silently strips, then trims it down to their max length.
+
+        Steam appears to ignore all characters that it cannot handle, and trim it down to 64 legal characters.
+        For whatever reason, they don't enforce this, they just silently ignore anything bad. This is our attempt to copy that behavior.
+        """
+        return (''.join([i if ord(i) < 128 else '' for i in data]))[:64]
+
     async def _handle_login_finished(self, credentials) -> Union[NextStep, Authentication]:
         parsed_url = parse.urlsplit(credentials["end_uri"])
         params = parse.parse_qs(parsed_url.query)
         if ("password" not in params or "username" not in params):
             return next_step_response_simple(DisplayUriHelper.LOGIN, True)
         user = params["username"][0]
-        pws = params["password"][0]
+        pws = self.sanitize_string(params["password"][0])
+
         await self._websocket_client.communication_queues["websocket"].put({'mode': AuthCall.RSA_AND_LOGIN, 'username' : user, 'password' : pws })
         result = await self._get_websocket_auth_step()
         if (result == UserActionRequired.NoActionConfirmLogin):

@@ -167,6 +167,7 @@ def to_UserAction(method: TwoFactorMethod) -> UserActionRequired:
     else: #if TwoFactorMethod.InvalidAuthData or an invalid number
         return UserActionRequired.InvalidAuthData
 
+#may be used in the future to help display additional errors on the HTML page. for now they are unused and therefore commented out. 
 #class DisplayErrors(enum):
 #    """Enumeration to help us display errors in our custom webpage. 
 #    Each name is associated with an error url parameter.
